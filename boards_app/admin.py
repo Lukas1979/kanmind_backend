@@ -5,3 +5,4 @@ from .models import Board
 class BoardAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "owner", "member_count")
     filter_horizontal = ("members",)
+    search_fields = ("title", "owner__username")

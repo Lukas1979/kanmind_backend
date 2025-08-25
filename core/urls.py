@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/', include('auth_app.api.urls')),
     path('api/boards/', include('boards_app.api.urls')),
     path('api/email-check/', EmailCheckView.as_view(), name='email-check'),
+    path('api/tasks/', include('tasks_app.api.urls')),
 ]
