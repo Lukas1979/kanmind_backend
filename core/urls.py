@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from django.urls import path, include
 
 from boards_app.api.views import EmailCheckView

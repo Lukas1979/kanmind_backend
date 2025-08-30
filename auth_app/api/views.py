@@ -34,7 +34,6 @@ class LoginView(APIView):
     POST /api/login/
     Authenticates a user using their email and password
     and returns an authentication token that can be used for further API requests.
-
     """
 
     permission_classes = [AllowAny]

@@ -1,7 +1,10 @@
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound
+
 from ..models import Board
-from django.contrib.auth import get_user_model
+from tasks_app.api.models import Task
 
 User = get_user_model()
 
@@ -16,35 +19,26 @@ class BoardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = [
-            "id",
-            "title",
-            "members",
-            "member_count",
-            "ticket_count",
-            "tasks_to_do_count",
-            "tasks_high_prio_count",
-            "owner_id",
-        ]
+        fields = ["id", "title", "members", "member_count", "ticket_count", "tasks_to_do_count", "tasks_high_prio_count", "owner_id"]
 
     def get_member_count(self, obj):
         return obj.members.count()
 
     def get_ticket_count(self, obj):
-        return 0  # später dynamisch berechnen
+        return obj.tasks.count()
 
     def get_tasks_to_do_count(self, obj):
-        return 0  # später dynamisch berechnen
+        return obj.tasks.filter(status="to-do").count()
 
     def get_tasks_high_prio_count(self, obj):
-        return 0  # später dynamisch berechnen
+        return obj.tasks.filter(priority="high").count()
 
     def validate_members(self, value):
         users = User.objects.filter(id__in=value)
         if users.count() != len(value):
             missing_ids = set(value) - set(users.values_list("id", flat=True))
             raise serializers.ValidationError(
-                f"The following user IDs do not exist: {list(missing_ids)}"
+                f"The following user IDs (members) do not exist: {list(missing_ids)}"
             )
         return value
 
@@ -58,15 +52,36 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class UserMiniSerializer(serializers.ModelSerializer):
-    fullname = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ["id", "email", "fullname"]
 
-    def get_fullname(self, obj):
-        return f"{obj.fullname}"
 
+class TaskListSerializer(serializers.ModelSerializer):
+    assignee = UserMiniSerializer(read_only=True)
+    reviewer = UserMiniSerializer(read_only=True)
+    comments_count = serializers.SerializerMethodField()
+    creator_id = serializers.IntegerField(source="creator.id", read_only=True)
+
+    class Meta:
+        model = Task
+        fields = (
+            "id",
+            "title",
+            "description",
+            "status",
+            "priority",
+            "assignee",
+            "reviewer",
+            "due_date",
+            "comments_count",
+            "creator_id"
+        )
+
+    def get_comments_count(self, obj):
+        return obj.comments.count()
+    
 
 class BoardDetailSerializer(serializers.ModelSerializer):
     members = UserMiniSerializer(many=True, read_only=True)
@@ -74,64 +89,38 @@ class BoardDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = [
-            "id",
-            "title",
-            "owner_id",
-            "members",
-            "tasks",
-        ]
+        fields = ["id", "title", "owner_id", "members", "tasks"]
 
     def get_tasks(self, obj):
-        # Aktuell noch leer zurückgeben
-        return []
+        tasks = obj.tasks.all()
+        return TaskListSerializer(tasks, many=True).data
 
 
 class BoardUpdateSerializer(serializers.ModelSerializer):
-    members = serializers.ListField(
-        child=serializers.IntegerField(), write_only=True, required=False
-    )
     title = serializers.CharField(required=False)
+    members = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True, required=False, write_only=True)
+    owner_data = UserMiniSerializer(source="owner", read_only=True)
+    members_data = UserMiniSerializer(source="members", many=True, read_only=True)
 
     class Meta:
         model = Board
-        fields = ["title", "members"]
-
-    def validate_members(self, value):
-        users = User.objects.filter(id__in=value)
-        if users.count() != len(value):
-            missing_ids = set(value) - set(users.values_list("id", flat=True))
-            raise serializers.ValidationError(
-                f"The following user IDs do not exist: {list(missing_ids)}"
-            )
-        return value
+        fields = ["id", "title", "members", "owner_data", "members_data"]
 
     def update(self, instance, validated_data):
         if "title" in validated_data:
             instance.title = validated_data["title"]
-            instance.save()
 
         if "members" in validated_data:
-            members = User.objects.filter(id__in=validated_data["members"])
-            instance.members.set(members)
+            instance.members.set(validated_data["members"])
 
+        instance.save()
         return instance
 
 
 class EmailCheckSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
     email = serializers.EmailField(required=True)
-    fullname = serializers.CharField(read_only=True)
 
     def validate(self, attrs):
         email = attrs.get("email")
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            raise NotFound(detail="Email not found.")
-
-        attrs.clear()
-        attrs["id"] = user.id
-        attrs["email"] = user.email
-        attrs["fullname"] = f"{user.fullname}"
-        return attrs
+        user = get_object_or_404(User, email=email)
+        return {"id": user.id, "email": user.email, "fullname": user.fullname}
