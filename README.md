@@ -2,7 +2,7 @@
 
 The **KanMind Backend** is a Django REST Framework (DRF) project that serves as an API for the [KanMind Frontend](https://github.com/Developer-Akademie-Backendkurs/project.KanMind?tab=readme-ov-file#kanmind-frontend-project).
 
-It was developed as part of the Developer Academy to help students with backend experience get started with smaller frontend integrations.
+It was developed as part of the **Developer Akademie** to help students with backend experience get started with smaller frontend integrations.
 
 ---
 
