@@ -8,7 +8,7 @@ It was developed as part of the **Developer Akademie** to help students with bac
 
 This backend is a **development project** and runs on the Django Development Server (`python manage.py runserver`).
 It is **not intended for production use**, as no security or deployment modifications have been made.
-Its sole purpose is **learning and experimentation** as part of the **Developer Academy**.
+Its sole purpose is **learning and experimentation** as part of the **Developer Akademie**.
 
 ---
 
