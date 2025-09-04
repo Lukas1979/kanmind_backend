@@ -10,6 +10,11 @@ User = get_user_model()
 
 
 class BoardSerializer(serializers.ModelSerializer):
+    """
+    This is a Django REST Framework (DRF) serializer for the board model.
+    It defines how board data is transferred, validated, and created, including relationships to members and tasks.
+    """
+    
     members = serializers.ListField(child=serializers.IntegerField(), write_only=True)
     member_count = serializers.SerializerMethodField()
     ticket_count = serializers.SerializerMethodField()
@@ -52,6 +57,9 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class UserMiniSerializer(serializers.ModelSerializer):
+    """
+    This is a compact serializer for the User model that transmits only the most important information about a user.
+    """
 
     class Meta:
         model = User
@@ -59,6 +67,11 @@ class UserMiniSerializer(serializers.ModelSerializer):
 
 
 class TaskListSerializer(serializers.ModelSerializer):
+    """
+    Das ist ein Django REST Framework (DRF) Serializer für das Task-Modell, 
+    der Aufgaben zusammen mit zugehörigen Informationen über Benutzer und Kommentare darstellt.
+    """
+    
     assignee = UserMiniSerializer(read_only=True)
     reviewer = UserMiniSerializer(read_only=True)
     comments_count = serializers.SerializerMethodField()
@@ -84,6 +97,11 @@ class TaskListSerializer(serializers.ModelSerializer):
     
 
 class BoardDetailSerializer(serializers.ModelSerializer):
+    """
+    This is a Django REST Framework (DRF) serializer for the board model 
+    that provides detailed information about a board, including members and tasks.
+    """
+    
     members = UserMiniSerializer(many=True, read_only=True)
     tasks = serializers.SerializerMethodField()
 
@@ -97,6 +115,11 @@ class BoardDetailSerializer(serializers.ModelSerializer):
 
 
 class BoardUpdateSerializer(serializers.ModelSerializer):
+    """
+    This is a Django REST Framework (DRF) serializer for the board model, 
+    used to update a board, specifically its title and members.
+    """
+    
     title = serializers.CharField(required=False)
     members = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True, required=False, write_only=True)
     owner_data = UserMiniSerializer(source="owner", read_only=True)
@@ -118,6 +141,11 @@ class BoardUpdateSerializer(serializers.ModelSerializer):
 
 
 class EmailCheckSerializer(serializers.Serializer):
+    """
+    This is a Django REST Framework (DRF) serializer that checks whether an email address belongs 
+    to an existing user and returns the user data.
+    """
+    
     email = serializers.EmailField(required=True)
 
     def validate(self, attrs):

@@ -1,3 +1,8 @@
+"""
+This is the admin configuration for the board model, including a custom form.
+It defines how boards are displayed, edited, and managed in the Django admin.
+"""
+
 from django import forms
 from django.contrib import admin
 

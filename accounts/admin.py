@@ -1,3 +1,8 @@
+"""
+The CustomUserAdmin class extends Django’s UserAdmin and defines how the custom user model CustomUser 
+is represented in the Django Admin.
+"""
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 

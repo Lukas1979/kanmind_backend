@@ -1,3 +1,8 @@
+"""
+This is the admin configuration for the Task and Comment models in Django. 
+It defines how tasks and comments are displayed, filtered, and searched in the admin interface.
+"""
+
 from django.contrib import admin
 
 from tasks_app.api.models import Task, Comment

@@ -11,6 +11,11 @@ User = get_user_model()
 
 
 class TaskCreateSerializer(serializers.ModelSerializer):
+    """
+    This is a Django REST Framework (DRF) serializer for creating tasks within a board.
+    It handles both input data validation and API response serialization.
+    """
+    
     board = serializers.IntegerField(write_only=True)
     assignee_id = serializers.PrimaryKeyRelatedField(
         source="assignee", queryset=User.objects.all(), required=False,
@@ -73,6 +78,11 @@ class TaskCreateSerializer(serializers.ModelSerializer):
 
 
 class TaskUpdateSerializer(serializers.ModelSerializer):
+    """
+    This is a Django REST Framework (DRF) serializer for updating tasks within a board.
+    It ensures that only authorized users can make changes and validates user assignments.
+    """
+    
     assignee_id = serializers.PrimaryKeyRelatedField(
         source="assignee", queryset=User.objects.all(), required=False, allow_null=True, write_only=True
     )
@@ -114,6 +124,11 @@ class TaskUpdateSerializer(serializers.ModelSerializer):
 
 
 class AssignedToMeAndReviewingSerializer(serializers.ModelSerializer):
+    """
+    This is a Django REST Framework (DRF) serializer that presents tasks specifically to the user 
+    that are assigned to them or that they are supposed to review.
+    """
+    
     assignee = UserMiniSerializer(read_only=True)
     reviewer = UserMiniSerializer(read_only=True)
     comments_count = serializers.SerializerMethodField()
@@ -138,6 +153,10 @@ class AssignedToMeAndReviewingSerializer(serializers.ModelSerializer):
 
 
 class CommentListCreateSerializer(serializers.ModelSerializer):
+    """
+    This is a Django REST Framework (DRF) serializer that handles comments for display and creation operations in the API.
+    """
+    
     author = serializers.CharField(source="author.fullname", read_only=True)
     author_id = serializers.IntegerField(source="author.id", read_only=True)
 

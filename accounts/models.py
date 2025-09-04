@@ -1,3 +1,9 @@
+"""
+A custom manager that provides the create_user and create_superuser methods.
+And,
+a custom user model that uses email instead of username as the login field.
+"""
+
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 

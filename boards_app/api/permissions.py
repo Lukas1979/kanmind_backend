@@ -2,6 +2,10 @@ from rest_framework import permissions
 
 
 class IsBoardMemberOrOwner(permissions.BasePermission):
+    """
+    This is a custom permission class for Django REST Framework (DRF) that checks whether a user has access to a board object.
+    """
+    
     message = "Forbidden. The user must be either a member of the board or the owner of the board."
 
     def has_object_permission(self, request, view, obj):
@@ -12,6 +16,10 @@ class IsBoardMemberOrOwner(permissions.BasePermission):
 
 
 class IsBoardOwner(permissions.BasePermission):
+    """
+    This is a custom permission class for Django REST Framework (DRF) that checks whether a user is the owner of a board.
+    """
+    
     message = "Forbidden. The user must be the owner of the board to delete it."
 
     def has_object_permission(self, request, view, obj):

@@ -7,6 +7,11 @@ User = get_user_model()  # <- important: use your CustomUser, not Default User
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
+    """
+    This is a Django REST Framework (DRF) serializer for registering a new user.
+    It defines how incoming data is validated and then a User object is created.
+    """
+    
     email = serializers.EmailField(
         required=True, validators=[UniqueValidator(queryset=User.objects.all())]
     )
@@ -37,6 +42,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
     
 
 class LoginSerializer(serializers.Serializer):
+    """
+    This is a Django REST Framework (DRF) serializer for a user's login.
+    It validates the login credentials and authenticates the user.
+    """
+    
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True, required=True)
 
