@@ -40,7 +40,7 @@ Its sole purpose is **learning and experimentation** as part of the **Developer 
    py -3 -m venv .venv
    .\.venv\Scripts\Activate.ps1
    ```
-Your terminal prompt should now show (.venv) indicating the virtual environment is active.
+   Your terminal prompt should now show (.venv) indicating the virtual environment is active.
 
 3. Install dependencies
    ```bash
