@@ -47,7 +47,7 @@ Its sole purpose is **learning and experimentation** as part of the **Developer 
    pip install --upgrade pip
    pip install -r requirements.txt
 
-4. Set up environment variables__
+4. Set up environment variables<br>
    If a .env.example file exists:
    ```bash
    cp .env.example .env
