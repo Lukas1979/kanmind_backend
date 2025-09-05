@@ -27,7 +27,7 @@ Its sole purpose is **learning and experimentation** as part of the **Developer 
    git clone https://github.com/Lukas1979/kanmind_backend.git
    cd kanmind-backend
 
-2. Create and activate a virtual environment
+2. Create and activate a virtual environment<br>
    It is recommended to use a virtual environment to manage dependencies.
 
    macOS / Linux:
