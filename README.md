@@ -24,5 +24,59 @@ Its sole purpose is **learning and experimentation** as part of the **Developer 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/username/kanmind-backend.git
+   git clone https://github.com/Lukas1979/kanmind_backend.git
    cd kanmind-backend
+
+2. Install dependencies
+   ```bash
+   pip install --upgrade pip
+   pip install -r requirements.txt
+
+3. Set up environment variables
+   ```bash
+   If a .env.example file exists:
+   cp .env.example .env
+
+   Edit .env to configure settings like DEBUG, SECRET_KEY, ALLOWED_HOSTS, and database credentials.
+
+   For development, you can use SQLite (default) and just set:
+
+   DEBUG=True
+   SECRET_KEY=your-secret-key
+   ALLOWED_HOSTS=127.0.0.1,localhost
+   TIME_ZONE=Europe/Zurich
+
+4. Apply database migrations
+   ```bash
+   python manage.py migrate
+
+   If you have new model changes, create and apply migrations:
+
+   python manage.py makemigrations
+   python manage.py migrate
+
+5. Create a superuser
+   ```bash
+   python manage.py createsuperuser
+
+   Follow the prompts to enter a username, email, and password. This user can log in to the Django admin.
+
+6. Run the development server
+   ```bash
+
+   python manage.py runserver
+
+   Open your browser at http://127.0.0.1:8000/
+   to see the project running.
+
+   To run on your local network:
+
+   python manage.py runserver 0.0.0.0:8000
+
+   Make sure to add your IP to ALLOWED_HOSTS in .env.
+
+7. Access Django Admin
+   ```bash
+   Visit http://127.0.0.1:8000/admin/
+   and log in using your superuser credentials.
+
